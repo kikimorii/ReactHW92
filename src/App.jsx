@@ -1,10 +1,10 @@
-import { AppContext } from '../context';
+import { AppContext } from './context';
 import { useEffect } from 'react';
-import { useInitialValues } from '../hooks/useInitialValues';
-import { TodoList } from '../components/todoList';
-import { NewTodoItem } from '../components/newTodoItem';
-import { Search } from '../components/search';
-import { SERVER_URL } from '../utils';
+import { useInitialValues } from './hooks/useInitialValues';
+import { TodoList } from './components/todoList';
+import { NewTodoItem } from './components/newTodoItem';
+import { Search } from './components/search';
+import { SERVER_URL } from './utils';
 import styles from './App.module.scss';
 
 export const App = () => {
