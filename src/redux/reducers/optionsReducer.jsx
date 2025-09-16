@@ -1,16 +1,26 @@
 const initialOptionsState = {
     isSorted: false,
     searchPhrase: "",
-    isChangedTodos: false,
 }
 
 export const optionsReducer = (state = initialOptionsState, action) => {
     const { type, payload } = action;
     switch (type) {
-        // cases...
+        case "SET_IS_SORTED": {
+            return {
+                ...state,
+                isSorted: !state.isSorted,
+            };
+        };
+        case "SET_SEARCH_PHRASE": {
+            return {
+                ...state,
+                searchPhrase: payload,
+            };
+        };
 
         default: {
             return state;
-        }
-    }
-}
+        };
+    };
+};
