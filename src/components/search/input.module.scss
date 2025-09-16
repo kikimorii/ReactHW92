@@ -1,0 +1,13 @@
+.input {
+    flex-grow: 1;
+}
+
+.input:focus, .input:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: -1px;
+}
+
+.input {
+    border-radius: 10px;
+    border: none;
+}
