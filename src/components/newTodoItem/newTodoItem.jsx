@@ -1,25 +1,24 @@
 import { ConfirmButton, ResetButton, Input } from './';
 import { useState } from 'react';
-import { AppContext } from '../../context';
-import { useContext } from 'react';
-import { SERVER_URL } from '../../utils';
 import styles from './newTodoItem.module.scss';
+import { useDispatch } from 'react-redux';
+import { addNewTodo } from '../../redux/actions';
 
 const NewTodoItem = () => {
+    const dispatch = useDispatch();
     const [inputValue, setInputValue] = useState("");
-    const { functions } = useContext(AppContext);
-    const { setNewTodo } = functions;
+    
     return (
         <div className={styles.form}>
             <Input inputValue={inputValue} setInputValue={setInputValue} />
             {inputValue !== "" ? <ResetButton handleClick={() => setInputValue("")} /> : ""}
             <ConfirmButton
                 handleClick={() => {
-                    setNewTodo(SERVER_URL, {
+                    dispatch(addNewTodo({
                         id: Date.now(),
                         title: inputValue,
                         completed: false,
-                    });
+                    }));
                     setInputValue("");
                 }}
                 isDisable={!inputValue}

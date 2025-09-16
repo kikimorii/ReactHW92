@@ -1,27 +1,13 @@
 import { SERVER_URL } from '../../utils'
 
-export const setTodos = () => {
-    return (dispatch) => {
-        fetch(SERVER_URL)
-            .then((response) => response.json())
-            .then((loadedData) => dispatch({
-                type: "SET_TODOS",
-                payload: loadedData,
-            }));
-    };
-};
-
-export const addNewTodo = (title) => {
+export const addNewTodo = (data) => {
     return (dispatch) => {
         fetch(SERVER_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                title,
-                completed: false
-            })
+            body: JSON.stringify(data)
         }).then((response) => response.json())
             .then((loadedNewTodo) => dispatch({
                 type: "ADD_NEW_TODO",
@@ -52,10 +38,50 @@ export const renameTodo = (id, data) => {
         }).then((response) => response.json())
             .then((loadedData) => dispatch({
                 type: "RENAME_TODO",
-                payload: {
-                    id: id,
-                    newData: loadedData,
-                },
+                payload: loadedData,
             }));
-    }
-}
+    };
+};
+
+export const setTodos = (isSorted = false, searchPhrase = "") => {
+    return (dispatch) => {
+        if (!isSorted && !searchPhrase.trim()) {
+            fetch(SERVER_URL)
+                .then((response) => response.json())
+                .then((loadedData) => dispatch({
+                    type: "SET_TODOS",
+                    payload: loadedData,
+                }));
+        } else {
+            const params = new URLSearchParams();
+
+            const trimmed = searchPhrase.trim();
+            if (trimmed) {
+                params.set("title_like", trimmed);
+            }
+
+            if (isSorted) {
+                params.set("_sort", "title");
+                params.set("_order", "asc");
+            }
+
+            const queryString = params.toString();
+            fetch(`${SERVER_URL}?${queryString}`)
+                .then((response) => response.json())
+                .then((loadedData) => dispatch({
+                    type: "SET_TODOS",
+                    payload: loadedData,
+                }));
+        };
+    };
+};
+
+export const setSearchPhrase = (value) => ({
+    type: "SET_SEARCH_PHRASE",
+    payload: value,
+})
+
+export const setIsSorted = (value) => ({
+    type: "SET_IS_SORTED",
+    payload: value,
+})

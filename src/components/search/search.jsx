@@ -1,33 +1,38 @@
-import { useContext, useState } from 'react';
-import { AppContext } from '../../context';
+import { useState } from 'react';
 import { ConfirmButton, FilterButton, Input, ResetButton } from './';
 import { SERVER_URL } from '../../utils';
 import styles from './search.module.scss';
+import { getSearchPhrase, getIsSorted } from '../../redux/selects';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTodos, setSearchPhrase, setIsSorted } from '../../redux/actions';
 
 const Search = () => {
-    const { data, functions } = useContext(AppContext);
-    const [inputValue, setInputValue] = useState(data.options.searchPhrase);
-    const hasFilters = data.options.isSorted || inputValue.trim().length > 0;
+    const searchPhrase = useSelector(getSearchPhrase);
+    const isSorted = useSelector(getIsSorted);
+    const [inputValue, setInputValue] = useState(searchPhrase);
+    const hasFilters = isSorted || inputValue.trim().length > 0;
+    const dispatch = useDispatch();
 
     return (
         <form className={styles.form}>
             <Input inputValue={inputValue} setInputValue={setInputValue} />
             {hasFilters && (
                 <ResetButton handleClick={() => {
-                    functions.setIsSorted(false);
-                    functions.setSearchPhrase("");
+                    dispatch(setIsSorted(false));
+                    dispatch(setSearchPhrase(""));
                     setInputValue("");
-                    functions.getFilteredTodos(SERVER_URL, false, "");
+                    dispatch(setTodos());
                 }} />
             )}
             <FilterButton handleClick={() => {
-                const newValue = !data.options.isSorted;
-                functions.setIsSorted(newValue);
-                functions.getFilteredTodos(SERVER_URL, newValue, inputValue);
-            }}>{data.options.isSorted ? "Отключить сортировку" : "Отсортировать"}</FilterButton>
-            <ConfirmButton disabled={inputValue} handleClick={() =>
-                functions.getFilteredTodos(SERVER_URL, data.options.isSorted, inputValue)
-            } />
+                const newValue = !isSorted;
+                dispatch(setIsSorted(newValue));
+                dispatch(setTodos(newValue, inputValue));
+            }}>{isSorted ? "Отключить сортировку" : "Отсортировать"}</FilterButton>
+            <ConfirmButton disabled={inputValue !== searchPhrase} handleClick={() => {
+                dispatch(setTodos(isSorted, inputValue));
+                dispatch(setSearchPhrase(inputValue));
+            }} />
         </form>
     )
 };

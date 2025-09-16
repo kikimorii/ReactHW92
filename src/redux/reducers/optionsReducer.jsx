@@ -9,7 +9,7 @@ export const optionsReducer = (state = initialOptionsState, action) => {
         case "SET_IS_SORTED": {
             return {
                 ...state,
-                isSorted: !state.isSorted,
+                isSorted: payload,
             };
         };
         case "SET_SEARCH_PHRASE": {

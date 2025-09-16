@@ -1,15 +1,15 @@
 import { DeleteButton, Input, SaveButton, ResetButton } from './';
-import { useContext, useState } from 'react';
-import { handleResetInputValue } from '../../../utils';
-import { AppContext } from '../../../context';
-import { SERVER_URL } from '../../../utils';
+import { useState } from 'react';
 import styles from './todoItem.module.scss';
+import { removeTodo } from '../../../redux/actions';
+import { renameTodo } from '../../../redux/actions';
+import { useDispatch } from 'react-redux';
 
 
 const TodoItem = ({ id, title, completed }) => {
     const [checkboxValue, setCheckboxValue] = useState(completed);
     const [inputValue, setInputValue] = useState(title);
-    const { functions } = useContext(AppContext);
+    const dispatch = useDispatch();
 
     return (
         <li className={styles.item}>
@@ -24,13 +24,16 @@ const TodoItem = ({ id, title, completed }) => {
                 setInputValue={setInputValue}
             />
             {(inputValue !== title) || (checkboxValue !== completed)
-                ? <ResetButton handleClick={() => handleResetInputValue(setInputValue, title)} /> : ""}
+                ? <ResetButton handleClick={() => {
+                    setCheckboxValue(completed);
+                    setInputValue(title);
+                }} /> : ""}
             {(inputValue !== title) || (checkboxValue !== completed)
                 ? <SaveButton handleClick={() => {
-                    if (inputValue === "") functions.deleteTodo(SERVER_URL, id)
-                    else functions.updateTodo(SERVER_URL, id, { completed: checkboxValue, title: inputValue })
+                    if (inputValue === "") dispatch(removeTodo(id))
+                    else dispatch(renameTodo(id, {completed: checkboxValue, title: inputValue}))
                 }} /> : ""}
-            <DeleteButton handleClick={() => functions.deleteTodo(SERVER_URL, id)} />
+            <DeleteButton handleClick={() => dispatch(removeTodo(id))} />
         </li>
     )
 };
