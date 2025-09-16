@@ -1,6 +1,7 @@
 const initialOptionsState = {
     isSorted: false,
     searchPhrase: "",
+    isLoading: false,
 }
 
 export const optionsReducer = (state = initialOptionsState, action) => {

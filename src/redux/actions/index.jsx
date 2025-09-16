@@ -79,9 +79,9 @@ export const setTodos = (isSorted = false, searchPhrase = "") => {
 export const setSearchPhrase = (value) => ({
     type: "SET_SEARCH_PHRASE",
     payload: value,
-})
+});
 
 export const setIsSorted = (value) => ({
     type: "SET_IS_SORTED",
     payload: value,
-})
+});
