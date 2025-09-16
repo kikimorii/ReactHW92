@@ -1,10 +1,9 @@
-import { useContext } from 'react';
-import { AppContext } from '../../context';
+import { useSelector } from 'react-redux';
+import { getTodos } from '../../redux/selects';
 import { TodoItem } from './todoItem';
 
 const TodoList = () => {
-    const { data } = useContext(AppContext);
-    const { todos } = data;
+    const todos = useSelector(getTodos);
     return (
         <ul>
             {todos.map(({ id, title, completed }) => (
